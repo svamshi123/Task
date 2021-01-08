@@ -5,6 +5,7 @@ import { createRecord, updateRecord, deleteRecord } from 'lightning/uiRecordApi'
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 import getALLtask from '@salesforce/apex/TaskClass.getAllTask';
+import getTask from '@salesforce/apex/TaskClass.getTask';
 
 import TASK_OBJECT from '@salesforce/schema/Task__c';
 import ID_FIELD from '@salesforce/schema/Task__c.Id';
@@ -14,6 +15,9 @@ import STATUS_FIELD from '@salesforce/schema/Task__c.Status__c';
 
 export default class TaskComponent extends LightningElement {
     task;
+    tkName;
+    tkPriority;
+    tkStatus;
     taskdata;
     taskname;
     priority;
@@ -27,6 +31,7 @@ export default class TaskComponent extends LightningElement {
     resdelete;
     rescomplete;
     taskdataCom;
+
 
     @wire(getObjectInfo, { objectApiName: TASK_OBJECT })
     objectInfo;
@@ -95,6 +100,20 @@ export default class TaskComponent extends LightningElement {
         createRecord(recordInput).then(task => {
             this.task = task.id;
             refreshApex(this.wiredActivities);
+            const inputFields = this.template.querySelectorAll('lightning-input');
+            console.log(inputFields);
+            if (inputFields) {
+                inputFields.forEach(field => {
+                    field.value = ' ';
+                });
+            }
+            const combox = this.template.querySelectorAll('lightning-combobox');
+            console.log(combox);
+            if (combox) {
+                combox.forEach(field => {
+                    field.value = ' ';
+                });
+            }
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Success',
@@ -102,6 +121,7 @@ export default class TaskComponent extends LightningElement {
                     variant: 'success',
                 }),
             );
+
         }).catch(error => {
             this.dispatchEvent(
                 new ShowToastEvent({
@@ -115,7 +135,14 @@ export default class TaskComponent extends LightningElement {
     updateRecord(event) {
         let updateId = event.target.id;
         this.resupdate = updateId.split("-");
+        getTask({ Id: this.resupdate[0] }).then((data) => {
+            //console.log(data[0].Name);
+            this.tkName = data[0].Name;
+            this.tkPriority = data[0].priorities__c;
+            this.tkStatus = data[0].Status__c;
+        })
         this.isModalOpen = true;
+
     }
     closeModal() {
         this.isModalOpen = false;

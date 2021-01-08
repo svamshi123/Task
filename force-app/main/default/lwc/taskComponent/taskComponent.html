@@ -84,10 +84,10 @@
                     <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">update the Record </h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                    <lightning-input label="Enter Task" onchange={handleOnchange}></lightning-input><br />
-                    <lightning-combobox label="Select priority" options={PpickListvalues} onchange={handelPriority}>
+                    <lightning-input label="Enter Task" value={tkName} onchange={handleOnchange}></lightning-input><br />
+                    <lightning-combobox label="Select priority" value={tkPriority} options={PpickListvalues} onchange={handelPriority}>
                     </lightning-combobox><br />
-                    <lightning-combobox label="Select status" options={SpickListvalues} onchange={handleStatus}>
+                    <lightning-combobox label="Select status" value={tkStatus} options={SpickListvalues} onchange={handleStatus}>
                     </lightning-combobox><br />
                 </div>
                 <footer class="slds-modal__footer">
